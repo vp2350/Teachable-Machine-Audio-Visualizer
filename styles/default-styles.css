@@ -1,54 +1,124 @@
 body {
-	background: #eeeeee;
-	font-family: tahoma, verdana, sans serif;
+    background: #ffffff;
+    text-rendering: optimizeLegibility;
+}
+
+* {
+    font-family: 'Mulish', sans-serif;
+    font-size: 18px;
+}
+
+h1 {
+    font-size: 32px;
 }
 
 canvas {
-	margin-left: 1rem;
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
-	background: #fafafa;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 5px 40px rgba(0, 0, 0, 0.1), 0 -5px 40px rgba(0, 0, 0, 0.1),
+        -5px 0 40px rgba(0, 0, 0, 0.1), 5px 0 40px rgba(0, 0, 0, 0.1);
+    background: #fafafa;
 }
 
-#controls{
-  margin-left: 1rem;
+#controls {
+    margin-left: 1rem;
 }
 
-#volumeLabel{
-  margin-left: 1rem;
+#volumeLabel {
+    margin-left: 1rem;
 }
 
-section{
-  margin-bottom: 1rem;
+section {
+    margin-bottom: 1rem;
 }
 
-#playButton{
-  font-size: 1.2rem;
-  width: 6rem;
+button {
+    width: 150px;
+    height: 50px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-button[data-playing="yes"]:after{
-  content: "Pause";
+#playButton {
+    background-color: #0073cf;
 }
 
-button[data-playing="no"]:after{
-  content: "Play";
+button[data-playing='yes']:after {
+    content: 'Pause';
 }
 
-#fsButton{
-  font-size: 1.2rem;
-  width: 8rem;
+button[data-playing='no']:after {
+    content: 'Play';
+}
+
+.buttons {
+    margin-bottom: 10px;
+}
+
+.buttons #fsButton {
+    margin-left: 5px;
 }
 
 #container {
-	margin: 0px auto;
-	width: 500px;
-	height: 375px;
-	border: 10px #333 solid;
+    margin: 0px auto;
+    width: 500px;
+    height: 375px;
+    border: 10px #333 solid;
 }
+
+#checkboxes {
+    display: grid;
+    gap: 5px;
+}
+
 #videoElement {
-	width: 500px;
-	height: 375px;
-	background-color: #666;
+    width: 500px;
+    height: 375px;
+    background-color: #666;
+}
+
+pre {
+    border-left: 3px solid #222222;
+    padding: 5px 0 5px 5px;
+    background-color: #777777;
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+code {
+    font-family: 'Share Tech Mono', monospace;
+    line-height: 1.4;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    gap: 20px;
+    padding: 1rem;
+}
+
+.topOptions {
+    display: grid;
+    gap: 10px;
+}
+
+#mag {
+    color: magenta;
+}
+
+#blu {
+    color: blue;
+}
+
+#gre {
+    color: green;
+}
+
+#red {
+    color: red;
 }
