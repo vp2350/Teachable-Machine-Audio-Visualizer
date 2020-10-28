@@ -3,45 +3,160 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Audio Visualizer</title>
-	<link href="styles/default-styles.css" type="text/css" rel="stylesheet" />
-	<script src="./src/loader.js" type="module"></script>
+    <link href="styles/default-styles.css" type="text/css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
 </head>
 <body>
 <main>
-    <div id="container">
-        <video autoplay="true" id="videoElement">
+    <div>
+        <canvas width="1280" height="720"></canvas>
+        <h1>Teachable Machine Image Model</h1>
+        <button type="button" onclick="init()">Start</button>
+        <div id="webcam-container"></div>
+        <div id="label-container"></div>
+        <script
+            src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+        <script type="text/javascript">
+            // More API functions here:
+            // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
-        </video>
+            // the link to your model provided by Teachable Machine export panel
+            const URL = "./my_model/";
+
+            let model, webcam, labelContainer, maxPredictions;
+
+            // Load the image model and setup the webcam
+            async function init() {
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+
+                // load the model and metadata
+                // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+                // or files from your local hard drive
+                // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+
+                // Convenience function to setup a webcam
+                const flip = true; // whether to flip the webcam
+                webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+                await webcam.setup(); // request access to the webcam
+                await webcam.play();
+                window.requestAnimationFrame(loop);
+
+                // append elements to the DOM
+                document.getElementById("webcam-container").appendChild(webcam.canvas);
+                labelContainer = document.getElementById("label-container");
+                for (let i = 0; i < maxPredictions; i++) { // and class labels
+                    labelContainer.appendChild(document.createElement("div"));
+                }
+            }
+
+            async function loop() {
+                webcam.update(); // update the webcam frame
+                await predict();
+                window.requestAnimationFrame(loop);
+            }
+
+            // run the webcam image through the image model
+            async function predict() {
+                // predict can take in an image, video or canvas html element
+                const prediction = await model.predict(webcam.canvas);
+                for (let i = 0; i < maxPredictions; i++) {
+                    const classPrediction =
+                        prediction[ i ].className + ": " + prediction[ i ].probability.toFixed(2);
+                    labelContainer.childNodes[ i ].innerHTML = classPrediction;
+                }
+            }
+        </script>
+        <script src="./src/loader.js" type="module"></script>
+
     </div>
-	<canvas width="800" height="400"></canvas>
-	<div id="controls">
-		<section>
-			<button id="playButton" data-playing="no"></button>
-			<button id="fsButton">Full Screen</button>
-		
-			<label>Track: 
-				<select id="trackSelect">
-					<option value="media/New Adventure Theme.mp3" selected>New Adventure Theme</option>
-					<option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
-					<option value="media/The Picard Song.mp3">The Picard Song</option>
-				</select>
-			</label>
-		</section>
-		
-		<section>
-			Volume: <input type="range" id="volumeSlider" min="0" max="2" value="1" step="0.01">
-			<span id="volumeLabel">???</span>
-		</section>
-		<section>
-          <span><input type="checkbox" id="gradientCB" checked><label for="gradientCB">Show Gradient</label></span>
-          <span><input type="checkbox" id="barsCB" checked><label for="barsCB">Show Bars</label></span>
-          <span><input type="checkbox" id="circlesCB" checked><label for="circlesCB">Show Circles</label></span>
-          <!-- we'll use this 4th checkbox soon! -->
-          <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
-          <span><input type="checkbox" id="invertCB"><label for="invertCB">Invert Colors</label></span>
-          <span><input type="checkbox" id="embossCB"><label for="embossCB">Emboss</label></span>
-        </section>
-	</div>
+    <div>
+        <div id="headings">
+            <h1>Teachable Machine Audio Visualizer</h1>
+            Click on start and do one of the following poses:
+
+            <pre><code>
+- Thumbs Up: Adventure Theme
+- Rock Sign: Peanuts Theme
+- Vulcan Sign: The Picard Song
+- Select freeze cooldown if you do not want the song to change</code>
+    </pre>
+        
+        </div>
+        <div id="controls">
+            <section>
+                <div class="buttons">
+                    <button id="playButton" data-playing="no"></button>
+                    <button id="fsButton">Full Screen</button>
+                </div>
+                <div class="topOptions">
+                    <div><label id="cooldown">Cooldown:  </label>
+                    <span><input type="checkbox" id="cooldownCB"><label for="cooldownCB">Freeze Cooldown </label></span></div>
+                    <div>
+                         Track:
+                            <select id="trackSelect">
+                                <option value="media/New Adventure Theme.mp3" selected>New
+                                    Adventure Theme</option>
+                                <option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
+                                <option value="media/The Picard Song.mp3">The Picard Song
+                                </option>
+                            </select>
+                         
+                    </div>
+                </div>
+            </section>
+            <section>
+                 Tint Style:
+                    <form>
+                        <div id="mag"><input type="radio" name="tint" value="Magenta" checked> Magenta</div>
+                        <div id="blu"><input type="radio" name="tint" value="Blue"> Blue</div>
+                        <div id="gre"><input type="radio" name="tint" value="Green"> Green</div>
+                        <div id="red"><input type="radio" name="tint" value="Red"> Red</div>
+                    </form>
+                 
+            </section>
+            <section>
+                 Data Type:
+                    <select id="dataType">
+                        <option value="frequency" selected>Frequency</option>
+                        <option value="waveform">Waveform</option>
+                    </select>
+                 
+            </section>
+            <section>
+                Volume: <input type="range" id="volumeSlider" min="0" max="2" value="1"
+                    step="0.01">
+                <span id="volumeLabel">???</span>
+            </section>
+            <section id="checkboxes">
+                <span><input type="checkbox" id="gradientCB"><label
+                        for="gradientCB">Show Gradient</label> </span>
+                <span><input type="checkbox" id="barsCB"><label for="barsCB">Show
+                        Lines</label> </span>
+                <span><input type="checkbox" id="bouncingCB"><label
+                        for="bouncingCB">Show Bouncing Lines</label> </span>
+                <span><input type="checkbox" id="circlesCB" checked><label
+                        for="circlesCB">Show Circles</label> </span>
+                <span><input type="checkbox" id="curvesCB" checked><label
+                        for="curvesCB">Show Quadratic Curves (Best to see the
+                        beat)</label> </span>
+                <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show
+                        Noise </label></span>
+                <span><input type="checkbox" id="invertCB"><label for="invertCB">Invert
+                        Colors</label> </span>
+                <span><input type="checkbox" id="embossCB"><label
+                        for="embossCB">Emboss</label> </span>
+                <span><input type="checkbox" id="tintCB"><label
+                        for="tintCB">Tint</label> </span>
+            </section>
+        </div>
+    </div>
 </main>
 </body>
 </html>
