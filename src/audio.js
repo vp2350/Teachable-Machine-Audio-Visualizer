@@ -68,9 +68,16 @@ function pauseCurrentSound(){
     element.pause();
 }
 
+function getDuration(){
+    return element.duration;
+}
+
+function getCurrent(){
+    return element.currentTime;
+}
 function setVolume(value){
     value= Number(value); // make sure that it's a Number rather than a String
     gainNode.gain.value= value;
 }
 
-export {audioCtx, setupWebAudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, analyserNode};
+export {audioCtx, setupWebAudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, analyserNode, getDuration, getCurrent};
