@@ -9,7 +9,7 @@ The visualizer was trained on a limited model so results might vary.
 
 ### Theme
 
-The app is an audio visualizer that lets you play a song by making the respective hand signs for the song in front of the webcam.
+The app is an audio visualizer that lets you play a song by making the respective hand signs for the song in front of the webcam, using Google's Teachable Machine Technology.
 
 It lets you switch between several settings and choose different visualizer options for the audio, including switching between the type of audio data (frequency and waveform).
 
