@@ -1,8 +1,11 @@
-# 330-project-2
 
-## Teachable Machine Audio Visualizer:
+# Teachable Machine Audio Visualizer:
 
 [Link to live project](https://people.rit.edu/vp2350/330/tm-my-image-model/AudioHW%20-%203/)
+
+Please read the instructions before use
+
+The visualizer was trained on a limited model so results might vary.
 
 ### Theme
 
